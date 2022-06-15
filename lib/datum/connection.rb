@@ -6,11 +6,14 @@ module Datum
   class Record
     @@config_for = {}
 
-    def self.establish_connection(dsn)
-      raise ArgumentError, "dsn cannot be nil" if dsn.nil?
+    def self.establish_connection(dsn = nil)
+      if dsn.nil?
+        raise Datum::ConnectionNotEstablished if Datum.default_dsn.nil?
+
+        return establish_connection(Datum.default_dsn)
+      end
 
       @@config_for[self] = parse_dsn(dsn)
-
       true
     end
 
