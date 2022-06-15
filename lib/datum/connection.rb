@@ -6,13 +6,19 @@ module Datum
   class Record
     @@config_for = {}
 
-    def self.establish_connection(dsn = nil)
-      if dsn.nil?
-        establish_connection(Yarp::Runtime.application.config.database_url)
-      else
-        @@config_for[self] = parse_dsn(dsn)
-      end
+    def self.establish_connection(dsn)
+      raise ArgumentError, "dsn cannot be nil" if dsn.nil?
+
+      @@config_for[self] = parse_dsn(dsn)
+
       true
+    end
+
+    def self.connection_established?
+      connection
+      true
+    rescue Datum::ConnectionNotEstablished
+      false
     end
 
     def self.connection
