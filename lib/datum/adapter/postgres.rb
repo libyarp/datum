@@ -138,10 +138,19 @@ module Datum::Adapter
     end
 
     def prepare_migration_log
-      @db.exec(<<-SQL)
-        CREATE TABLE IF NOT EXISTS datum_metadata (mid TEXT);
-        CREATE INDEX IF NOT EXISTS metadata_mid ON datum_metadata (mid);
-      SQL
+      supress_notices do
+        @db.exec(<<-SQL)
+          CREATE TABLE IF NOT EXISTS datum_metadata (mid TEXT);
+          CREATE INDEX IF NOT EXISTS metadata_mid ON datum_metadata (mid);
+        SQL
+      end
+    end
+
+    def supress_notices
+      old = @db.set_notice_receiver { |result| _ = result }
+      yield
+    ensure
+      @db.set_notice_receiver(&old)
     end
 
     def register_migration(id)
