@@ -150,6 +150,12 @@ module Datum::Adapter
       SQL
     end
 
+    def unregister_migration(id)
+      @db.exec_params(<<-SQL, [id])
+        DELETE FROM datum_metadata WHERE mid = $1
+      SQL
+    end
+
     def tx_begin
       execute("BEGIN")
     end

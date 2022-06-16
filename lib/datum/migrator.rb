@@ -92,6 +92,7 @@ module Datum
           puts "    #{l}"
         end
         conn.execute_ddl(mig.down.read.to_s)
+        conn.unregister_migration(mig.id)
       end
       conn.tx_commit
     end

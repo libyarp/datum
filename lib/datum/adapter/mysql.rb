@@ -142,6 +142,10 @@ module Datum::Adapter
       execute("INSERT INTO datum_metadata VALUES (?)", id)
     end
 
+    def unregister_migration(id)
+      execute("DELETE FROM datum_metadata WHERE mid = ?", id)
+    end
+
     def tx_begin
       @db.query("START TRANSACTION;")
     end

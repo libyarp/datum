@@ -50,6 +50,8 @@ RSpec.describe Datum::Migrator do
     it "migrates backward" do
       subject.move_forward
       subject.rollback
+      v = subject.migration_status
+      expect(v.first).not_to be_up
     end
   end
 
